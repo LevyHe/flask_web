@@ -1,0 +1,324 @@
+{% extends "Layout.html" %} {% block top_panel %}
+<div class="wrapper">
+	<div class="user">
+		<img src="{{ url_for('static', filename='Images/user_avatar.png') }}" alt="user_avatar" class="user_avatar" />
+		<span class="label">[{{ g.user.user_name }}]</span>
+		<!-- Top Tooltip -->
+		<ul class="hover_drop_menu menu_with_icons ">
+			<li>
+				<a class="i_16_close" href="{{ url_for('logout') }}" title="退出登录">
+					<span class="label">注销</span>
+				</a>
+			</li>
+			<li>
+				<a class="i_16_files" href="{{ url_for('users') }}" title="用户管理">
+					<span class="label">用户管理</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+{% endblock %} {% block body %}
+<!--pattern="((^[1-6][0-5][0-5][0-3][0-5])|(^[1-6][0-5][0-5][0-2][0-9])|(^[1-6][0-5][0-4]\d{2})|(^[1-6][0-4]\d{3})(^[1-5]\d{4})|(^[1-9]\d{0,3}))$"--> 
+{% if g.user.priority_levels > 1 %}
+<div class="dialog" id="device_manage_dialog" title="修改设备信息">
+	<div class="widget_contents Padding ">
+		<div class="line_grid">
+			<div class="label">非专业人员请勿操作</div>
+		</div>
+		<form  class='device_manage_form' method="post">
+			<div class="line_grid">
+				<div class="g_3"><span class="label">旧设备ID</span></div>
+				<div class="g_9">
+					<input type="text" name="dev_oldid"  class="simple_field " 
+						value="{% if deviceinfo %}{{ deviceinfo[0].device_id }}{% endif %}" 
+						readonly="true">
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_3"><span class="label">新设备ID</span></div>
+				<div class="g_9">
+					<input type="text" name="dev_newid"  class="simple_field"
+						value="{% if deviceinfo %}{{ deviceinfo[0].device_id }}{% endif %}" 
+						 required>					
+					<div class="field_notice"></div>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_3"><span class="label">IP地址</span></div>
+				<div class="g_9">
+					<input type="text" name="dev_ip" class="simple_field " 
+						value="{% if deviceinfo %}{{ deviceinfo[0].dest_ip }}{% endif %}" 
+						required pattern="((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$">
+					<div class="field_notice">IP地址格式：***.***.***.***</div>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_3"><span class="label">IP端口号</span></div>
+				<div class="g_9">
+					<input type="number"  min="1" max="65535" name="dev_port" class="simple_field"
+						value="{% if deviceinfo %}{{ deviceinfo[0].dest_port }}{% endif %}" 
+						 required>
+					<div class="field_notice">端口号范围：1-65535</div>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_100">
+					<span><input type="submit" value="修改" class="submitIt simple_buttons" /></span>
+					<span><input type="reset" value="取消" class="submitIt cancel_buttons" /></span>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- new tag -->
+<div class="dialog" id="new-tag-dialog" title="添加新的标签">
+	<div class="widget_contents Padding ">
+		<div class="line_grid">
+			<div id='new_tag_title_msg' class="label">标签名首字母必须为字母（a-z，A-Z)、下划线(_)开始,标签名必须是字母（a-z A-Z）、数字（0-9）、下划线（_）的组合。</div>
+		</div>
+			
+		<form class='add_new_tag_form' method="post" autocomplete="off">
+			<div class="line_grid">
+				<div class="g_3"><span class="label">标签名</span></div>
+				<div class="g_9">
+					<input type="text" name="tagname"  class="simple_field tagname_mask" placeholder="New Tag Name" required>
+					<div class="field_notice">请输入不超过30个字符</div>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_3"><span class="label">标签功能名称</span></div>
+				<div class="g_9">
+					<input type="text" name="tagshortdesc" maxLength=5 class="simple_field">
+					<div class="field_notice">请输入不超过30个字符</div>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_3"><span class="label">标签功能详细描述</span></div>
+				<div class="g_9">
+					<textarea name="tagdesc" maxlength=500 class="simple_field"></textarea>
+					<div class="field_notice">请输入不超过200个字符</div>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_3"><span class="label">标签类型</span></div>
+				<div class="g_9">
+					<select class="simple_form" id="his_search_type" name="tag_type">
+						<option value=0 title="默认数据类型" selected="selected">选择所有</option>
+						<option value=193 title="布尔值">BOOL</option>
+						<option value=194 title="1字节有符号数">SINT</option>
+						<option value=195 title="2字节有符号数">INT</option>
+						<option value=196 title="4字节有符号数">DINT</option>
+						<option value=197 title="8字节有符号数">LINT</option>
+						<option value=198 title="1字节无符号数">USINT</option>
+						<option value=199 title="2字节无符号数">UINT</option>
+						<option value=200 title="4字节无符号数">UDINT</option>
+						<option value=201 title="8字节无符号数">ULINT</option>
+						<option value=202 title="浮点数">REAL</option>
+					</select>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_100">
+					<span class="check_label">是否禁用这个标签</span>
+					<input type="checkbox" class="simple_form" value=1 name="tag_isuse"/>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_100">
+					<div><span><input type="submit" value="添加" class="submitIt simple_buttons" /></span></div>
+					<div><span><input type="reset" value="取消" class="submitIt cancel_buttons" /></span></div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="dialog" id="import-tag-dialog" title="批量添加标签">
+	<div class="widget_contents Padding ">
+		<div class="line_grid">
+			<div class="label">选择导入的文件,文件必须为csv格式</div>
+		</div>
+		<form  class='import_tags_form' method="post" enctype=multipart/form-data >
+			<div class="line_grid">
+				<div class="g_3"><span class="label">选择导入的文件</span>
+				</div>
+				<div class="g_9">
+					<input type="file" name='im_file' accept=".csv"	value="请选择要导入的文件" class="simple_form" id='tag_import_file_id' required/>
+				</div>
+			</div>
+			<div class="widget_contents noPadding" id='import_tags_div'>
+				<table class="importtables tables ">
+				</table>
+			</div>
+			<div class="line_grid">
+				<div class="g_100">
+					<span><input type="submit" value="批量导入" class="submitIt simple_buttons" /></span>
+					<span><input type="reset" value="取消" class="submitIt cancel_buttons" /></span>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="dialog" id="delete-tag-dialog" title="删除标签">
+	<div class="widget_contents Padding ">
+		<!--<div class="line_grid">
+			<div class="label">请选择需要删除的标签</div>
+		</div>-->
+		<form class='delete_tags_form' method="GET">
+			<div class="g_12">
+				<div class="widget_header">
+					<h4 class="widget_header_title wwIcon i_16_checkbox">请选择需要删除的标签</h4>
+				</div>
+				<div class="widget_contents noPadding twCheckbox">
+					<table class="deletetables tables "> 
+						<thead>
+							<tr>
+								<th>
+									<input type="checkbox" class="simple_form tMainC" />
+								</th>
+								<th data-options="field:'tagname'">Tagname</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for message in messages %}
+						<tr>
+							<td><input type="checkbox" class="simple_form" /></td>
+							<td>{{ message.tagname }}</td>
+						</tr>
+						{% else %} {% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_100">
+					<span><input type="submit" value="删除选中" class="submitIt simple_buttons" /></span>
+					<span><input type="reset" value="取消" class="submitIt cancel_buttons" /></span>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endif %}
+<aside class="sidebar">
+	<ul class="tab_nav">
+		<li class="active_tab i_32_tables">
+			<a href="{{ url_for('home') }}" title="首页">
+				<span class="tab_label">首页</span>
+				<span class="tab_info">管理界面</span>
+			</a>
+		</li>
+		<li class="i_32_forms">
+			<a href="{{ url_for('history') }}" title="历史记录">
+				<span class="tab_label">记录</span>
+				<span class="tab_info">历史记录</span>
+			</a>
+		</li>
+	</ul>
+</aside>
+
+<div class="contents">
+		<div class="g_12">
+			<div class="widget_header wwOptions">
+				<h4 class="widget_header_title wwIcon i_16_resize">设备信息</h4>
+				{% if g.user.priority_levels > 1 %}
+				<div class="w_Options i_16_settings">
+					<!-- Drop Menu -->
+					<ul class="drop_menu menu_with_icons right_direction">
+						<li>
+							<div class="i_16_pages device_manage_btn" title="设备管理">
+								<span class="label">设备管理</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				{% endif %}
+			</div>
+			<div class="widget_contents noPadding">
+				<table class="tables resizeable_tables">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>IP</th>
+							<th>Port</th>
+							<th>Connect State</th>
+							<th>Error State</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for devio in deviceinfo %}
+						<tr>
+							<td>{{ devio.device_id }}</td>
+							<td>{{ devio.dest_ip }}</td>
+							<td>{{ devio.dest_port }}</td>
+							<td>{{ devio.isconnected }}</td>
+							<td>{{ devio.error_desc }}</td>
+						</tr>
+						{% else %} {% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- Separator -->
+		<div class="g_12 separator"><span></span></div>		
+		<div class="g_12">			
+			<div class="widget_header wwOptions">
+				<h4 class="widget_header_title wwIcon i_16_data">标签信息</h4>
+				{% if g.user.priority_levels > 1 %}
+				<div class="w_Options i_16_settings">
+					<!-- Drop Menu -->
+					<ul class="drop_menu menu_with_icons right_direction">
+						<li>
+							<div class="i_16_add new-tag-button"  title="新建标签">
+								<span class="label">新建标签</span>
+							</div>
+						</li>
+						<li>
+							<div class="i_16_files import_tag_button" title="批量添加">
+								<span class="label">批量添加</span>
+							</div>
+						</li>
+						<li>
+							<div class="i_16_close delete_tag_button"  title="批量删除标签">
+								<span class="label">批量删除</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				{% endif %}
+			</div>			
+			<div class="widget_contents noPadding">
+				<table class="datatables tables resizeable_tables">
+					<thead>
+						<tr>
+							<th>Tag </th>
+							<th>Tag Name</th>
+							<th>Tag Type</th>							
+							<th>Tag Value</th>
+							<th>Tag State</th>
+							<th>Update Time</th>
+						</tr>
+					</thead>
+					<tbody>
+
+						{% for message in messages %}
+						<tr>
+							<td>{{ message.tagname }}</td>
+							<td>{{ message.tagshortdesc }}</td>
+							<td>{{ message.typename }}</td>
+							<td>{{ message.tagvalue }}</td>
+							<td>{{ message.error_name }}</td>
+							<td>{{ message.update_time }}</td>
+						</tr>
+						{% else %} {% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+{% endblock %}

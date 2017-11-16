@@ -1,0 +1,127 @@
+{% extends "Layout.html" %} {% block top_panel %}
+<div class="wrapper">
+	<div class="user">
+		<img src="{{ url_for('static', filename='Images/user_avatar.png') }}" alt="user_avatar" class="user_avatar" />
+		<span class="label">[{{ g.user.user_name }}]</span>
+		<!-- Top Tooltip -->
+		<ul class="hover_drop_menu menu_with_icons ">
+			<li>
+				<a class="i_16_close" href="{{ url_for('logout') }}" title="退出登录">
+					<span class="label">注销</span>
+				</a>
+			</li>
+			<li>
+				<a class="i_16_files" href="{{ url_for('users') }}" title="用户管理">
+					<span class="label">用户管理</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+{% endblock %} {% block body %}
+<!--pattern="((^[1-6][0-5][0-5][0-3][0-5])|(^[1-6][0-5][0-5][0-2][0-9])|(^[1-6][0-5][0-4]\d{2})|(^[1-6][0-4]\d{3})(^[1-5]\d{4})|(^[1-9]\d{0,3}))$"--> 
+
+<aside class="sidebar">
+	<ul class="tab_nav">
+		<li class=" i_32_tables">
+			<a href="{{ url_for('home') }}" title="首页">
+				<span class="tab_label">首页</span>
+				<span class="tab_info">管理界面</span>
+			</a>
+		</li>
+		<li class="i_32_forms">
+			<a href="{{ url_for('history') }}" title="历史记录">
+				<span class="tab_label">记录</span>
+				<span class="tab_info">历史记录</span>
+			</a>
+		</li>
+		<li class="active_tab i_32_ui">
+			<a href="{{ url_for('users') }}" title="用户管理">
+				<span class="tab_label">用户</span>
+				<span class="tab_info">用户管理</span>
+			</a>
+		</li>
+	</ul>
+</aside>
+
+<div class="contents">
+	<div class="g_12">
+		<div class="widget_header wwOptions">
+			<h4 class="widget_header_title wwIcon i_16_resize">修改密码</h4>
+		</div>
+		<div class="widget_contents noPadding">
+			<div class="flash_message line_grid"><div class="g_9"><span class="label">原始密码</span></div></div>
+			<form action="" method="post" id="chang_passwd_form">
+				<div class="line_grid">
+					<div class="g_3"><span class="label">原始密码</span></div>
+					<div class="g_9">
+						<input class="simple_field" title="Old Password" name="old_passwd" type="password" placeholder="************" required>
+					</div>
+				</div>
+				<div class="line_grid">
+					<div class="g_3"><span class="label">新密码</span></div>
+					<div class="g_9">
+						<input class="simple_field" title="New Password" name="new_passwd" type="password" placeholder="************" required>
+					</div>
+				</div>
+				<div class="line_grid">
+					<div class="g_3"><span class="label">新密码确认</span></div>
+					<div class="g_9">
+						<input class="simple_field" title="Ensure Password" name="ensure_passwd" type="password" placeholder="************" required>
+					</div>
+				</div>
+				<div class="line_grid">
+					<div class="g_100">
+						<div><span><input type="submit" value="修改" class="submitIt simple_buttons" /></span></div>
+						<div><span><input type="reset" value="重置" class="submitIt cancel_buttons" /></span></div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	{% if g.user.priority_levels > 2 %}
+	<!-- Separator -->
+	<div class="g_12 separator"><span></span></div>
+	<div class="g_12">
+		<div class="widget_header wwOptions">
+			<h4 class="widget_header_title wwIcon i_16_data">用户管理</h4>
+			<div class="w_Options i_16_settings">
+				<!-- Drop Menu -->
+				<ul class="drop_menu menu_with_icons right_direction">
+					<li>
+						<div class="i_16_add add_user_btn" title="添加用户">
+							<span class="label">添加用户</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="widget_contents noPadding">
+			<table class="tables resizeable_tables" id="user_manage_table">
+				<thead>
+					<tr>
+						<th>USER ID</th>
+						<th>USER NAME</th>
+						<th>USER TYPE</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for user in userinfo %}
+					<tr>
+						<td>{{ user.user_id }}</td>
+						<td>{{ user.user_name }}</td>
+						<td>{{ user.user_level }}</td>
+					</tr>
+					{% else %} {% endfor %}
+				</tbody>
+			</table>
+			<form action=""  id="uer_manage_form" method="post">
+
+			</form>
+		</div>
+	</div>
+	{% endif %}
+</div>
+
+{% endblock %}

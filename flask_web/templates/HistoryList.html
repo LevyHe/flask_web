@@ -1,0 +1,117 @@
+{% extends "Layout.html" %} {% block top_panel %}
+<div class="wrapper">
+	<div class="user">
+		<img src="{{ url_for('static', filename='Images/user_avatar.png') }}" alt="user_avatar" class="user_avatar" />
+		<span class="label">[{{ g.user.user_name }}]</span>
+		<!-- Top Tooltip -->
+		<ul class="hover_drop_menu menu_with_icons ">
+			<li>
+				<a class="i_16_close" href="{{ url_for('logout') }}" title="退出登录">
+					<span class="label">注销</span>
+				</a>
+			</li>
+			<li>
+				<a class="i_16_files" href="{{ url_for('users') }}" title="用户管理">
+					<span class="label">用户管理</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+{% endblock %} {% block body %}
+<!--pattern="((^[1-6][0-5][0-5][0-3][0-5])|(^[1-6][0-5][0-5][0-2][0-9])|(^[1-6][0-5][0-4]\d{2})|(^[1-6][0-4]\d{3})(^[1-5]\d{4})|(^[1-9]\d{0,3}))$"--> 
+
+<aside class="sidebar">
+	<ul class="tab_nav">
+		<li class=" i_32_tables">
+			<a href="{{ url_for('home') }}" title="首页">
+				<span class="tab_label">首页</span>
+				<span class="tab_info">管理界面</span>
+			</a>
+		</li>
+		<li class="active_tab i_32_forms">
+			<a href="{{ url_for('history') }}" title="历史记录">
+				<span class="tab_label">记录</span>
+				<span class="tab_info">历史记录</span>
+			</a>
+		</li>
+	</ul>
+</aside>
+
+<div class="contents">
+	<div class="g_12">
+		<div class="widget_header wwOptions">
+			<h4 class="widget_header_title wwIcon i_16_resize">设备信息</h4>
+		</div>
+		<div class="widget_contents noPadding">
+			<div class="line_grid">
+				<div class="g_auto"><span class="label">From</span>
+				</div>
+				<div class="g_auto g_input">
+					<input type="text" id="his_start_date_id" class="simple_field pick_date" readonly="true"/>
+				</div>
+				<div class="g_auto">
+					<input type="time" id="his_start_time_id" class="simple_field" value="00:00"/>
+				</div>
+				<div class="g_auto"><span class="label">To</span>
+				</div>
+				<div class="g_auto g_input">
+					<input type="text" id="his_end_date_id"  class="simple_field pick_date" readonly="true" />
+				</div>
+				<div class="g_auto">
+					<input type="time" id="his_end_time_id" class="simple_field" value="00:00"/>
+				</div>
+			</div>
+			<div class="line_grid">
+				<div class="g_auto"><span class="label">标签名</span></div>
+				<div class="g_auto">
+					<input type="text" name="tagname"  id="his_search_tag" class="simple_field">
+				</div>
+				<div class="g_auto"><span class="label">标签类型</span></div>
+				<div class="g_auto">
+					<select class="simple_form" id="his_search_type" name="tag_type">
+						<option value=0 title="默认数据类型" selected="selected">选择所有</option>
+						<option value=193 title="布尔值">BOOL</option>
+						<option value=194 title="1字节有符号数">SINT</option>
+						<option value=195 title="2字节有符号数">INT</option>
+						<option value=196 title="4字节有符号数">DINT</option>
+						<option value=197 title="8字节有符号数">LINT</option>
+						<option value=198 title="1字节无符号数">USINT</option>
+						<option value=199 title="2字节无符号数">UINT</option>
+						<option value=200 title="4字节无符号数">UDINT</option>
+						<option value=201 title="8字节无符号数">ULINT</option>
+						<option value=202 title="浮点数">REAL</option>
+					</select>
+				</div>
+				<div class="g_auto"><input type="button" id="his_search_btn_id" value="搜素" class="simple_buttons search_buttons" /></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Separator -->
+	<div class="g_12 separator"><span></span></div>
+	<div class="g_12">
+		<div class="widget_header wwOptions">
+			<h4 class="widget_header_title wwIcon i_16_data">历史记录</h4>
+
+		</div>
+		<div class="widget_contents noPadding" id ="historylist">
+			<span class="label"> 没有任何记录信息</span>
+			<!--<table class="tables">
+				<tbody>
+					<tr>
+						<td>
+							<div class="widget_header cwhToggle">
+								<h4 class="widget_header_title wwIcon i_16_cHorizontal">Toogle Widget (Closed)</h4>
+							</div>
+							<div class="widget_contents cwClose noPadding">
+								<div class="mycharts" id="charts1"></div>
+							</div>
+						</td>
+				</tbody>
+			</table>-->
+		</div>
+	</div>
+</div>
+
+{% endblock %}

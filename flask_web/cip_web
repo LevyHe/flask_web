@@ -1,0 +1,29 @@
+#!/home/bms/apps/flask/bin/python2
+
+# -*- coding: utf-8 -*-
+
+import daemon
+import daemon.pidfile
+import os
+
+if __name__ == '__main__':
+    for i in range(9,0,-1):
+        new='/opt/pbbms/cipweb/cip_web%d.log'%i
+        old='/opt/pbbms/cipweb/cip_web%d.log'%(i-1)
+        if os.path.exists(old):
+          os.rename(old,new)    
+    out = open('/opt/pbbms/cipweb/cip_web0.log', 'w+')
+    context = daemon.DaemonContext(
+        working_directory='/home/bms/Project/cip_web/cip_web/',
+        #umask=0o002,
+        stderr=out,
+        stdout=out,
+        pidfile=daemon.pidfile.PIDLockFile('/var/run/cip_web.pid')
+        )
+    
+    with context:
+        #os.chdir("/home/bms/Project/cip_web/cip_web/")
+        print(os.getcwd())
+        from cip_web import app
+        app.run(host="0.0.0.0",port=80)
+

@@ -1,0 +1,44 @@
+{% extends "Layout.html" %}
+
+{% block top_panel %}
+
+{% endblock %}
+	
+
+{% block body %}
+
+<div class="login">
+	<div class="widget_header">
+		<h4 class="widget_header_title wwIcon i_16_login">登录</h4>
+	</div>
+
+	<div class="widget_contents lgNoPadding">
+	{% if error %}
+	<div class="line_grid">
+	<div class="errorlogin"><strong>Error:</strong> {{ error }}</div>
+	</div>
+	{% endif %}
+		<form action="" method="post">
+		<div class="line_grid">
+			<div class="g_2 g_2M"><span class="label">用户名</span></div>
+			<div class="g_10 g_10M">
+				<input class="simple_field tooltip" title="Your Username" name="user_name" type="text" placeholder="Username"></div>
+			<div class="clear"></div>
+		</div>
+		<div class="line_grid">
+			<div class="g_2 g_2M"><span class="label">密 码</span></div>
+			<div class="g_10 g_10M">
+				<input class="simple_field tooltip" title="Your Password" name="password" type="password" placeholder="password">
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="line_grid">
+			<div class="g_6"><input class="submitIt simple_buttons" value="登录" type="submit">
+			</div>
+			<div class="clear"></div>
+		</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}
