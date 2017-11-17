@@ -1,4 +1,4 @@
 # flask_web
-使用flask模型搭建的webserver
-# 运行环境
+set up a webserver with python and flask model
+# Operating environment
 Ubuntu+Python2.7+Flask+MySQL
