@@ -1,4 +1,4 @@
 # flask_web
-set up a webserver with python and flask model
+Set up a webserver with python and flask model
 # Operating environment
 Ubuntu+Python2.7+Flask+MySQL
